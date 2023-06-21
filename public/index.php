@@ -75,14 +75,37 @@ echo strtr(
 );
 echo '<br>';
 
+require 'function.php';
+
+$list = scanFolder('.');
 
 
+echo '<pre>';
+print_r($list);
+echo '</pre>';
 
 
+echo '<pre>';
+print_r(array_merge(
+[
+	1,
+	2,
+	3,
+], [
+	10,
+	20,
+	30,
+], [
+	100,
+	200,
+	300,
+]
+
+));
+echo '</pre>';
 
 
-
-
+echo getcwd() . '<br>';
 
 
 
