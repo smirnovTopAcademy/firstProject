@@ -1,16 +1,7 @@
 <?php
 
-/*if ($_SERVER['REQUEST_URI'] === '/') {
-	echo "Main page<br>" . PHP_EOL . "\n";
-} elseif (
-	substr(
-		$_SERVER['REQUEST_URI'],
-		0,
-		strpos($_SERVER['REQUEST_URI'], '?')
-	) === '/string') {
-	require('string/index.php');
-}
-*/
+use FirstProject\App\Request\Request;
+use FirstProject\App\Response\Response;
 
 class Main
 {
@@ -30,23 +21,30 @@ class Main
 		$this->route = new Route();
 	}
 
-	public function index()
+	/**
+		* @return Response
+		*/
+	public function index(): Response
 	{
-		if(is_file(__DIR__ . $this->route->getUrl())){
-			require_once(__DIR__ . $this->route->getUrl());
+		if (is_dir(__DIR__ . '/' . $this->route->getFolder()))
+		{
+			$path = __DIR__ . '/' . $this->route->getFolder()
+				. '/' . $this->route->getClass() . '.php';
+
+				if (is_file($path)) {
+					require_once($path);
+
+					$className = $this->route->getClass();
+
+					$function = $this->route->getFunction();
+
+					return (new $className)->{$function}($this->request);
+				}
 		}
+
 	}
 }
 
-class Request
-{
-	private $data;
-
-	public function __construct(array $data)
-	{
-		$this->data = $data;
-	}
-}
 
 class Route
 {
@@ -73,7 +71,37 @@ class Route
 	{
 		return $this->url;
 	}
+
+	public function getFolder()
+	{
+		$list = $this->getUrlParts();
+
+		return $list[0] ?? '';
+	}
+
+	public function getClass()
+	{
+		$list = $this->getUrlParts();
+
+		return $list[1] ?? '';
+	}
+
+	public function getFunction()
+	{
+		$list = $this->getUrlParts();
+
+		return $list[2] ?? 'index';
+	}
+
+	private function getUrlParts(): array
+	{
+		$list = explode('/', $this->url);
+
+		return array_values(array_filter($list));
+	}
 }
 
+
+
 $main = new Main();
-$main->index();
+echo $main->index()->getRestonse();

@@ -1,0 +1,16 @@
+{
+    "name": "first-project/app",
+    "type": "project",
+    "autoload": {
+        "psr-4": {
+            "FirstProject\\App\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Smirnov av"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {}
+}
